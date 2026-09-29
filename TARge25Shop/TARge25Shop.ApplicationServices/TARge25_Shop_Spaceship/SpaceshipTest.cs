@@ -1,5 +1,5 @@
-﻿using TARge25_Shop.Core.Dto;
-using TARge25_Shop.Core.ServiceInterface;
+﻿using TARge25Shop.Core.Dto;
+using TARge25Shop.Core.ServiceInterface;
 using Xunit;
 
 namespace TARge25_Shop.SpaceshipTest
