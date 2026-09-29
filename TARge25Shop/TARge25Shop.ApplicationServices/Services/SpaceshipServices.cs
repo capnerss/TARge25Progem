@@ -64,6 +64,8 @@ namespace TARge25Shop.ApplicationServices.Services
             spaceShip.EnginePower = dto.EnginePower;
             spaceShip.CreatedAt = dto.CreatedAt;
             spaceShip.UpdatedAt = DateTime.Now;
+            //lisame juurde piltide lisamise
+            _fileServices.FilesToApi(dto, spaceShip);
 
             //andmete uuendamine andmebaasis
             _context.Spaceships.Update(spaceShip);
@@ -84,6 +86,18 @@ namespace TARge25Shop.ApplicationServices.Services
         {
             var result = await _context.Spaceships
                 .FirstOrDefaultAsync(x => x.Id == id);
+
+            // var images muutaja alt otsib ulesse pildid
+            var images = await _context.FileToApis
+               .Where(x => x.SpaceshipId == id)
+               .Select(y => new FileToApiDto
+               {
+                   Id = y.Id,
+                   SpaceshipId = y.SpaceshipId,
+                   ExistingFilePath = y.ExistingFilePath,
+               }).ToArrayAsync();
+            //ja kutsub valja removeImagesFromApu meetodi
+            await _fileServices.RemoveImagesFromApi(images);
 
             _context.Spaceships.Remove(result);
             await _context.SaveChangesAsync();
